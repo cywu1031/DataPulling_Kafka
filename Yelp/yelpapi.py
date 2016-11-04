@@ -38,11 +38,10 @@ with io.open('yelpkey.json') as cred:
     
     client = Client(auth)
     producer = KafkaProducer(bootstrap_servers = 'localhost:9092')
+
     while(True):
        producer.send(kafkaTopic, CalculateAvgRating('chinese').encode('utf-8'))
        producer.send(kafkaTopic, CalculateAvgRating('Indian').encode('utf-8'))
        producer.send(kafkaTopic, CalculateAvgRating('mediterranean').encode('utf-8'))
        time.sleep(queryTime)  
-
-
     
