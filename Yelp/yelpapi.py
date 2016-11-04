@@ -19,15 +19,15 @@ with io.open('yelpkey.json') as cred:
     
     client = Client(auth)
     producer = KafkaProducer(bootstrap_servers = 'localhost:9092')
-    while(ture):
+    while(true):
        producer.send(kafkaTopic, CalculateAvgRating('chinese').encode('utf-8'))
        producer.send(kafkaTopic, CalculateAvgRating('Indian').encode('utf-8'))
        producer.send(kafkaTopic, CalculateAvgRating('mediterranean').encode('utf-8'))
        time.sleep(queryTime)  
 
-def CalculateAvgRating(s):
+def CalculateAvgRating(cuisine):
     params = {
-        'category_filter': s
+        'category_filter': cuisine
     }
     i = 0
     average_rating = 0
