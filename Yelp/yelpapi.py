@@ -33,9 +33,9 @@ def CalculateAvgRating(s):
     average_rating = 0
     total_rating = 0
     response = client.search('San Francisco', **params)
-    while( i < response.total ):
+    while( i < int(response.total) ):
         total_rating = total_rating + int(response.businesses[i]. rating)
-        i++
-    average_rating = total_rating/i
+        i = i+1
+    average_rating = total_rating/int(response.total)
     return average_rating
     
