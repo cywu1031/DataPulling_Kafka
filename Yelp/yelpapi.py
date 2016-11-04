@@ -10,7 +10,6 @@ kafkaTopic = 'yelp'
 
 with io.open('yelpkey.json') as cred: 
     creds = json.load(cred)
-    
     auth = Oauth1Authenticator(
         consumer_key = creds['consumer_key'],
         consumer_secret = creds['consumer_secret'],
@@ -19,18 +18,24 @@ with io.open('yelpkey.json') as cred:
     )
     
     client = Client(auth)
-
     producer = KafkaProducer(bootstrap_servers = 'localhost:9092')
+    while(ture):
+       producer.send(kafkaTopic, CalculateAvgRating('chinese').encode('utf-8'))
+       producer.send(kafkaTopic, CalculateAvgRating('Indian').encode('utf-8'))
+       producer.send(kafkaTopic, CalculateAvgRating('mediterranean').encode('utf-8'))
+       time.sleep(queryTime)  
 
+def CalculateAvgRating(s):
     params = {
-        # 'term': 'pizza',
-        'category_filter': 'pizza'
+        'category_filter': s
     }
-
-    while(True):
-        # search example
-    	response = client.search('san jose', **params)
-
-    	producer.send(kafkaTopic, response.businesses[2].name.encode('utf-8'))
-
-    	time.sleep(queryTime)
+    i = 0
+    average_rating = 0
+    total_rating = 0
+    response = client.search('San Francisco', **params)
+    while( i < response.total ):
+        total_rating = total_rating + int(response.businesses[i]. rating)
+        i++
+    average_rating = total_rating/i
+    return average_rating
+    
